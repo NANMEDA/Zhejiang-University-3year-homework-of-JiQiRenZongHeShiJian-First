@@ -175,7 +175,6 @@ if __name__ == '__main__':
         time.sleep(0.01)
 
 
-
     reverse_joint(True, objects_list)
     for i in range(29,15,-1):
         sim.setObjectMatrix(i, i+1,k1[29-i])
@@ -184,11 +183,17 @@ if __name__ == '__main__':
     position = get_position(True,objects_list)
     kArray = Planning(position, offset, last2)
     t2 = sim.getSimulationTime()
-    while (t := sim.getSimulationTime() - t2) <= 5:
+    while (t := sim.getSimulationTime() - t2) <= last2:
         angle = Excute(kArray, t)
         set_joint(True, False, objects_list, angle)
         client.step()  # triggers next simulation step
         time.sleep(0.01)
+
+
+    while (t := sim.getSimulationTime() - t2-last2) <= 20:
+        client.step()  # triggers next simulation step
+        time.sleep(0.01)
+
 
     # Stop simulation
     sim.stopSimulation()
